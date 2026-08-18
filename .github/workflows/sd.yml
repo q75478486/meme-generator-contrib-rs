@@ -1,0 +1,39 @@
+name: Build contrib‑rs aarch64‑android cdylib rust‑1.93.1 (match v0.2.3)
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout contrib‑rs source code
+        uses: actions/checkout@v4
+
+      - name: Checkout meme‑generator‑rs v0.2.3
+        run: |
+          git clone https://github.com/MemeCrafters/meme-generator-rs.git ../meme-generator-rs
+          cd ../meme-generator-rs
+          git checkout 9c0607476213c042156250213734800440137613
+
+      - name: Install fixed Rust 1.93.1
+        uses: dtolnay/rust-toolchain@1.93.1
+        with:
+          targets: aarch64-linux-android
+
+      - name: Install cross tool
+        run: cargo install cross
+
+      - name: Cross compile cdylib plugin
+        run: |
+          cross build --release --lib --target aarch64-linux-android
+        env:
+          CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER: aarch64-linux-android-clang
+          SKIA_STATIC_LINK: "1"
+
+      - name: Upload output so artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libmeme-contrib-v023-rust1931-android
+          path: target/aarch64-linux-android/release/libmeme_generator_contrib.so
