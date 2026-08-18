@@ -96,14 +96,15 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # 拉取主程序 v0.2.3，放在上层目录，满足依赖 ../meme-generator‑rs
+      # 拉取主程序 v0.2.3，放在上层目录
       - name: Fetch meme-generator-rs v0.2.3
         run: |
           git clone --depth 1 --branch v0.2.3 https://github.com/MemeCrafters/meme-generator-rs.git ../meme-generator-rs
 
-      # Android 强制锁定 rustc 1.93.1，与 v0.2.3 release 编译器版本对齐
+      # Android job 锁定 rust‑1.93.1
       - uses: dtolnay/rust-toolchain@1.93.1
 
+      # 删除重复path，修复 "'path' is already defined"
       - uses: swatinem/rust-cache@v2
 
       - name: Rustup add target
@@ -117,4 +118,3 @@ jobs:
           name: "meme-generator-contrib-${{ matrix.platform.label }}"
           path: |
             target/${{ matrix.platform.target }}/release/*.so
-          path: target/aarch64-linux-android/release/libmeme_generator_contrib.so
