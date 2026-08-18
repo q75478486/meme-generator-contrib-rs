@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout contrib‑rs source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Checkout meme‑generator‑rs v0.2.3
         run: |
@@ -33,7 +33,7 @@ jobs:
           SKIA_STATIC_LINK: "1"
 
       - name: Upload output so artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: libmeme-contrib-v023-rust1931-android
           path: target/aarch64-linux-android/release/libmeme_generator_contrib.so
